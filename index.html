@@ -1,0 +1,657 @@
+﻿<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f3ed">
+  <meta name="description" content="Descoperă locuri de neuitat din România: de la sate de munte la orașe vechi și peisaje sălbatice.">
+  <title>Hai prin România — locuri care rămân cu tine</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f5f3ed;
+      --ink: #202a28;
+      --muted: #717873;
+      --green: #315f4d;
+      --green-dark: #234638;
+      --orange: #d9744b;
+      --line: #dcded6;
+      --serif: "Playfair Display", Georgia, serif;
+      --sans: "DM Sans", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: var(--sans); }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+
+    .topbar {
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 7.2%;
+      border-bottom: 1px solid rgba(32, 42, 40, .1);
+      background: var(--paper);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 11px; font-weight: 700; font-size: 16px; }
+    .brand-mark { width: 31px; height: 31px; display: grid; place-items: center; border-radius: 50%; background: var(--green); color: white; font-family: var(--serif); font-size: 19px; }
+    .topbar nav { display: flex; gap: 34px; align-items: center; color: #505b55; font-size: 13px; }
+    .topbar nav a:hover { color: var(--orange); }
+    .nav-cta { border: 1px solid var(--green); border-radius: 3px; padding: 10px 15px; color: var(--green); }
+
+    .hero {
+      min-height: 610px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      color: white;
+      background: #35423a url("https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=2200&q=85") center 53% / cover no-repeat;
+    }
+    .hero::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(15, 27, 24, .76) 0%, rgba(17, 31, 27, .43) 46%, rgba(17, 31, 27, .03) 100%); }
+    .hero-content { position: relative; width: min(1120px, 86%); margin: 0 auto; padding: 48px 0 58px; animation: arrive .7s ease-out both; }
+    .eyebrow { display: flex; align-items: center; gap: 10px; margin: 0 0 22px; color: #e6c9a9; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; }
+    .eyebrow::before { content: ""; width: 27px; height: 1px; background: currentColor; }
+    h1, h2, h3, p { margin-top: 0; }
+    h1 { max-width: 680px; margin-bottom: 20px; font: 500 68px/1.08 var(--serif); }
+    .hero-copy { max-width: 470px; margin-bottom: 30px; color: rgba(255,255,255,.86); font-size: 16px; line-height: 1.75; }
+    .hero-link { display: inline-flex; align-items: center; gap: 14px; padding: 14px 19px; border-radius: 3px; background: #f5f3ed; color: var(--ink); font-size: 13px; font-weight: 700; transition: background .2s, transform .2s; }
+    .hero-link:hover { transform: translateY(-2px); background: white; }
+    .hero-link span { color: var(--orange); font-size: 18px; }
+    .hero-caption { position: absolute; right: 7.2%; bottom: 26px; color: rgba(255,255,255,.82); font-size: 11px; }
+
+    .intro { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; align-items: end; width: min(1120px, 86%); margin: 0 auto; padding: 83px 0 52px; }
+    .section-kicker { margin: 0 0 13px; color: var(--orange); font-size: 11px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; }
+    h2 { margin-bottom: 0; font: 500 42px/1.18 var(--serif); }
+    .intro-copy { max-width: 455px; margin: 0 0 4px; color: var(--muted); font-size: 14px; line-height: 1.8; }
+
+    .places { padding: 0 0 90px; }
+    .places-inner { width: min(1120px, 86%); margin: 0 auto; }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 19px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .filter-stack { display: flex; flex-direction: column; gap: 12px; flex: 1; }
+    .country-filters, .filters { display: flex; flex-wrap: wrap; gap: 7px; }
+    .country-filters { margin-bottom: 4px; }
+    .filter { border: 1px solid transparent; border-radius: 2px; padding: 9px 13px; background: transparent; color: #626d66; cursor: pointer; font-size: 12px; transition: all .18s; }
+    .filter:hover { color: var(--green); }
+    .filter[aria-pressed="true"] { border-color: var(--green); background: var(--green); color: white; }
+    .search { width: 220px; border: 1px solid var(--line); border-radius: 2px; padding: 10px 12px; outline: none; background: rgba(255,255,255,.54); font-size: 12px; }
+    .search:focus { border-color: var(--green); }
+    .search::placeholder { color: #8c938e; }
+    .results-count { margin: 19px 0; color: var(--muted); font-size: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 34px 22px; }
+    .place-card { min-width: 0; animation: arrive .45s ease-out both; }
+    .place-image { position: relative; overflow: hidden; aspect-ratio: 1.36; background: #d7d9cf; }
+    .place-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s; }
+    .place-card:hover .place-image img { transform: scale(1.035); }
+    .place-type { position: absolute; top: 12px; left: 12px; padding: 6px 9px; background: var(--paper); color: var(--green-dark); font-size: 10px; font-weight: 700; }
+    .place-info { display: flex; align-items: start; justify-content: space-between; gap: 12px; padding-top: 14px; }
+    .place-info h3 { margin-bottom: 5px; font: 600 21px/1.2 var(--serif); }
+    .place-info p { margin: 0; color: var(--muted); font-size: 12px; }
+    .place-arrow { flex: 0 0 auto; display: grid; place-items: center; width: 31px; height: 31px; border: 1px solid var(--line); border-radius: 50%; color: var(--green); font-size: 17px; transition: all .18s; }
+    .place-card:hover .place-arrow { border-color: var(--green); background: var(--green); color: white; }
+    .empty-state { grid-column: 1 / -1; padding: 45px 15px; color: var(--muted); text-align: center; }
+    .hidden { display: none; }
+
+    .note { display: flex; align-items: center; justify-content: space-between; gap: 30px; padding: 32px max(7%, calc((100% - 1120px) / 2)); background: #e8ebe3; }
+    .note p { max-width: 610px; margin: 0; color: #4d5951; font: 500 19px/1.5 var(--serif); }
+    .note a { flex: 0 0 auto; color: var(--green); font-size: 12px; font-weight: 700; }
+    footer { display: flex; justify-content: space-between; gap: 20px; padding: 25px 7.2%; color: #777f79; font-size: 11px; }
+
+    @keyframes arrive { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 760px) {
+      .topbar { height: 66px; padding: 0 6%; }
+      .topbar nav { gap: 16px; }
+      .topbar nav a:not(.nav-cta) { display: none; }
+      .hero { min-height: 560px; background-position: 58% center; }
+      .hero::before { background: linear-gradient(90deg, rgba(15, 27, 24, .76), rgba(17, 31, 27, .28)); }
+      .hero-content, .intro, .places-inner { width: 88%; }
+      h1 { max-width: 540px; font-size: 54px; }
+      .hero-caption { right: 6%; }
+      .intro { grid-template-columns: 1fr; gap: 18px; padding: 62px 0 37px; }
+      h2 { font-size: 36px; }
+      .toolbar { align-items: stretch; flex-direction: column; }
+      .search { width: 100%; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 29px 20px; }
+      .place-info h3 { font-size: 19px; }
+      .note { align-items: flex-start; flex-direction: column; padding: 28px 6%; }
+      footer { padding: 22px 6%; }
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 45px; }
+      .hero { min-height: 520px; }
+      .hero-copy { font-size: 14px; }
+      .grid { grid-template-columns: 1fr; gap: 27px; }
+      .place-image { aspect-ratio: 1.55; }
+      .filters { gap: 3px; }
+      .filter { padding: 8px 10px; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#sus"><span class="brand-mark" aria-hidden="true">H</span> <span class="brand-title">Hai prin România</span></a>
+    <nav aria-label="Navigare principală">
+      <a href="#locuri">Destinații</a>
+      <a href="#despre">Povestea locului</a>
+      <a class="nav-cta" href="#locuri">Alege o escapadă</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="sus" aria-labelledby="hero-title">
+      <div class="hero-content">
+        <p class="eyebrow">Un loc aproape. O lume întreagă.</p>
+        <h1 id="hero-title">România, în toate poveștile ei.</h1>
+        <p class="hero-copy">Drumuri care șerpuiesc prin munți, cetăți cu ferestre aprinse și dimineți liniștite la marginea apei. Hai să le descoperim.</p>
+        <a class="hero-link" href="#locuri">Explorează locurile <span aria-hidden="true">→</span></a>
+      </div>
+      <span class="hero-caption">Peisaj românesc, dimineața devreme</span>
+    </section>
+
+    <section class="intro" id="despre">
+      <div>
+        <p class="section-kicker">De aproape, altfel</p>
+        <h2>Mai mult decât un loc pe hartă.</h2>
+      </div>
+      <p class="intro-copy">Fiecare colț de țară are ritmul lui. Am adunat câteva dintre locurile care te fac să încetinești, să privești în jur și să-ți dorești să mai rămâi o zi.</p>
+    </section>
+
+    <section class="places" id="locuri" aria-label="Destinații din România">
+      <div class="places-inner">
+        <div class="toolbar">
+          <div class="filter-stack">
+            <div class="country-filters" role="group" aria-label="Alege o țară">
+              <button class="filter" type="button" data-country="toate" data-title="România, în toate poveștile ei" data-caption="Peisaj românesc, dimineața devreme" aria-pressed="true">Toate țările</button>
+              <button class="filter" type="button" data-country="romania" data-title="România, în toate poveștile ei" data-caption="Peisaj românesc, dimineața devreme" aria-pressed="false">România</button>
+              <button class="filter" type="button" data-country="italia" data-title="Italia, în toate poveștile ei" data-caption="Peisaj italian, dimineața devreme" aria-pressed="false">Italia</button>
+              <button class="filter" type="button" data-country="grecia" data-title="Grecia, în toate poveștile ei" data-caption="Peisaj grecesc, dimineața devreme" aria-pressed="false">Grecia</button>
+              <button class="filter" type="button" data-country="franta" data-title="Franța, în toate poveștile ei" data-caption="Peisaj francez, dimineața devreme" aria-pressed="false">Franța</button>
+              <button class="filter" type="button" data-country="spania" data-title="Spania, în toate poveștile ei" data-caption="Peisaj spaniol, dimineața devreme" aria-pressed="false">Spania</button>
+              <button class="filter" type="button" data-country="croatia" data-title="Croația, în toate poveștile ei" data-caption="Peisaj croat, dimineața devreme" aria-pressed="false">Croația</button>
+              <button class="filter" type="button" data-country="turcia" data-title="Turcia, în toate poveștile ei" data-caption="Peisaj turcesc, dimineața devreme" aria-pressed="false">Turcia</button>
+              <button class="filter" type="button" data-country="egipt" data-title="Egiptul, în toate poveștile lui" data-caption="Peisaj egiptean, dimineața devreme" aria-pressed="false">Egipt</button>
+            </div>
+            <div class="filters" role="group" aria-label="Filtrează destinațiile">
+              <button class="filter" type="button" data-filter="toate" aria-pressed="true">Toate locurile</button>
+              <button class="filter" type="button" data-filter="natura" aria-pressed="false">Natură</button>
+              <button class="filter" type="button" data-filter="istorie" aria-pressed="false">Istorie</button>
+              <button class="filter" type="button" data-filter="oras" aria-pressed="false">Orașe</button>
+            </div>
+          </div>
+          <label class="visually-hidden" for="search">Caută o destinație</label>
+          <input class="search" id="search" type="search" placeholder="Caută un loc..." autocomplete="off">
+        </div>
+
+        <p class="results-count" id="results-count" aria-live="polite">6 locuri de descoperit</p>
+        <div class="grid" id="destination-grid">
+          <article class="place-card" data-category="istorie oras" data-country="romania" data-name="sighisoara cetate transilvania">
+            <a href="https://ro.wikipedia.org/wiki/Sighi%C8%99oara" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Sighișoara">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f4/Primaria_Sighisoara_-_hdr.JPG/960px-Primaria_Sighisoara_-_hdr.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Clădiri istorice colorate într-un oraș vechi" loading="lazy"><span class="place-type">Cetate medievală</span></div>
+              <div class="place-info"><div><h3>Sighișoara</h3><p>Transilvania · Străzi cu povești</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="romania" data-name="delta dunarii natura apa pasari">
+            <a href="https://ro.wikipedia.org/wiki/Delta_Dun%C4%83rii" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Delta Dunării">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/RO_TL_Delta_Dun%C4%83rii.JPG/500px-RO_TL_Delta_Dun%C4%83rii.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Ape liniștite și stufăriș într-un peisaj natural" loading="lazy"><span class="place-type">Natură sălbatică</span></div>
+              <div class="place-info"><div><h3>Delta Dunării</h3><p>Dobrogea · Lumea dintre ape</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="romania" data-name="transfagarasan muntii fagaras drum munte">
+            <a href="https://ro.wikipedia.org/wiki/Transf%C4%83g%C4%83r%C4%83%C8%99an" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Transfăgărășan">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/2e/Transfagarasan-north.JPG/500px-Transfagarasan-north.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Creste înalte de munte învăluite în nori" loading="lazy"><span class="place-type">Drum de munte</span></div>
+              <div class="place-info"><div><h3>Transfăgărășan</h3><p>Munții Făgăraș · Sus, printre nori</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie" data-country="romania" data-name="castelul peles sinaia regal munte">
+            <a href="https://ro.wikipedia.org/wiki/Castelul_Pele%C8%99" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Castelul Peleș">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f9/01_Chateau_Peles.jpg/500px-01_Chateau_Peles.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Castel cu turnuri într-un peisaj montan" loading="lazy"><span class="place-type">Arhitectură regală</span></div>
+              <div class="place-info"><div><h3>Castelul Peleș</h3><p>Sinaia · O casă în pădure</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="romania" data-name="maramures sate traditii lemn">
+            <a href="https://ro.wikipedia.org/wiki/Maramure%C8%99" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Maramureș">
+              <div class="place-image"><img src="https://commons.wikimedia.org/wiki/Special:FilePath/Maramures_Josephinische_Landesaufnahme_1782-1785_Background.jpg?width=900" alt="Hartă istorică a Maramureșului din perioada 1782–1785" loading="lazy"><span class="place-type">Tradiții vii</span></div>
+              <div class="place-info"><div><h3>Maramureș</h3><p>Nordul țării · Timpul curge altfel</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="romania" data-name="salina turda subteran lac sare">
+            <a href="https://ro.wikipedia.org/wiki/Salina_Turda" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Salina Turda">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/22/Turda_Salt_Mine_A_real_museum_of_salt_mining_in_Transylvania_-_panoramio_%283%29.jpg/960px-Turda_Salt_Mine_A_real_museum_of_salt_mining_in_Transylvania_-_panoramio_%283%29.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Reflexii și lumină într-un spațiu de apă spectaculos" loading="lazy"><span class="place-type">Lume subterană</span></div>
+              <div class="place-info"><div><h3>Salina Turda</h3><p>Transilvania · O lume sub pământ</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="italia" data-name="italia roma colosseum vatican capodopera">
+            <a href="https://ro.wikipedia.org/wiki/Roma" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Roma">
+              <div class="place-image"><img src="https://images.unsplash.com/photo-1525874684015-58379d421a52?auto=format&fit=crop&w=1200&q=80" alt="Monumente istorice din Roma, Italia" loading="lazy"><span class="place-type">Istorie și cultură</span></div>
+              <div class="place-info"><div><h3>Roma</h3><p>Italia · Colosseum și Vatican</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="italia" data-name="italia venezia gondola canale oameni">
+            <a href="https://ro.wikipedia.org/wiki/Vene%C8%9Bia" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Veneția">
+              <div class="place-image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTmbgUbhVI433gykusPnqSbfmFjz6SMMX0miK13WYsRbKMxAtfi2Xu5Mwzg&s=10" alt="Canale din Veneția, Italia" loading="lazy"><span class="place-type">Oraș de poveste</span></div>
+              <div class="place-info"><div><h3>Veneția</h3><p>Italia · Canale și istorie</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="italia" data-name="italia amalfi coast mare maree golf">
+            <a href="https://ro.wikipedia.org/wiki/Coasta_Amalfi" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Coasta Amalfi">
+              <div class="place-image"><img src="https://vacanteinspirate.com/wp-content/uploads/2019/01/positano-2584836_1280-1024x682.jpg" alt="Mare și faleze de pe Coasta Amalfi" loading="lazy"><span class="place-type">Natură de coastă</span></div>
+              <div class="place-info"><div><h3>Coasta Amalfi</h3><p>Italia · Marea și culmile</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="italia" data-name="italia florenta duomo ponte vecchio arta">
+            <a href="https://ro.wikipedia.org/wiki/Floren%C8%9Ba" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Florența">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/63/Collage_Firenze.jpg/960px-Collage_Firenze.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Piața centrală și clădiri istorice din Florența" loading="lazy"><span class="place-type">Artă renascentistă</span></div>
+              <div class="place-info"><div><h3>Florența</h3><p>Italia · Artă și istorie</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="italia" data-name="italia lake como lux pitoresc munte">
+            <a href="https://ro.wikipedia.org/wiki/Lacul_Como" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Lacul Como">
+              <div class="place-image"><img src="https://static.wixstatic.com/media/f2fc67_94d43427c7d74d8b898205030015172e~mv2.jpg/v1/fill/w_980,h_1307,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/f2fc67_94d43427c7d74d8b898205030015172e~mv2.jpg" alt="Lacul Como și munții din jur" loading="lazy"><span class="place-type">Peisaj lacustru</span></div>
+              <div class="place-info"><div><h3>Lacul Como</h3><p>Italia · Apă, munte și liniște</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="italia" data-name="italia milan piazza duomo shopping">
+            <a href="https://ro.wikipedia.org/wiki/Milan" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Milano">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/58/Milan.Proper.Wikipedia.Image.png/960px-Milan.Proper.Wikipedia.Image.png?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Piața din Milano și arhitectura modernă" loading="lazy"><span class="place-type">Oraș european</span></div>
+              <div class="place-info"><div><h3>Milano</h3><p>Italia · Design și stil</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="italia" data-name="italia pisa torre pendente piazza miracoli">
+            <a href="https://ro.wikipedia.org/wiki/Pisa" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Pisa">
+              <div class="place-image"><img src="https://doeatbetterexperience.com/wp-content/uploads/2019/04/Pisa.jpg" alt="Turnul înclinat din Pisa" loading="lazy"><span class="place-type">Monument emblematic</span></div>
+              <div class="place-info"><div><h3>Pisa</h3><p>Italia · Turnul înclinat</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="italia" data-name="italia bologna tower medievale cucina">
+            <a href="https://ro.wikipedia.org/wiki/Bologna" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Bologna">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Torri_di_Bologna%2C_Bologna.jpg/330px-Torri_di_Bologna%2C_Bologna.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Clădiri medievale din Bologna" loading="lazy"><span class="place-type">Istorie și gastronomie</span></div>
+              <div class="place-info"><div><h3>Bologna</h3><p>Italia · Ture și gustări</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="italia" data-name="italia cinque terre coast liguria viata">
+            <a href="https://ro.wikipedia.org/wiki/Cinque_Terre" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Cinque Terre">
+              <div class="place-image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZQyOxp3KvF92KRxEcYtiS5nTfHw9LhPDZQEx3uew5OAUoLUPIM2PH_s2X&s=10" alt="Peisaj de coastă din Cinque Terre" loading="lazy"><span class="place-type">Coastă spectaculoasă</span></div>
+              <div class="place-info"><div><h3>Cinque Terre</h3><p>Italia · Drumeții și mare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="italia" data-name="italia capri insula mare lux">
+            <a href="https://ro.wikipedia.org/wiki/Capri" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Capri">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/33/Capri_coastline.jpg/960px-Capri_coastline.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Insula Capri și țărmul ei" loading="lazy"><span class="place-type">Insulă premium</span></div>
+              <div class="place-info"><div><h3>Capri</h3><p>Italia · Mare, stânci și lux</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="grecia" data-name="grecia santorini insula mare albastru">
+            <a href="https://ro.wikipedia.org/wiki/Santorini" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Santorini">
+              <div class="place-image"><img src="https://upload.wikimedia.org/wikipedia/commons/6/66/Ia_Santorini-2009-1.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled" alt="Case albe și mare albastră pe Santorini" loading="lazy"><span class="place-type">Peisaj insular</span></div>
+              <div class="place-info"><div><h3>Santorini</h3><p>Grecia · Soare și mare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="grecia" data-name="grecia atena acropole parthenon antichitate">
+            <a href="https://ro.wikipedia.org/wiki/Atena" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Atena">
+              <div class="place-image"><img src="https://our-story.ro/wp-content/uploads/2026/04/Postcard-cu-Acropola-din-Atena.webp" alt="Atena și Acropolele din Grecia" loading="lazy"><span class="place-type">Istorie antică</span></div>
+              <div class="place-info"><div><h3>Atena</h3><p>Grecia · Acropole și civilizație</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="grecia" data-name="grecia mykonos plaja nisip insula">
+            <a href="https://ro.wikipedia.org/wiki/Mykonos" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Mykonos">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/e/ea/Little_Venice_with_a_view_of_the_ferry_terminal_in_Mykonos%2C_Greece_-_50661522178.jpg/500px-Little_Venice_with_a_view_of_the_ferry_terminal_in_Mykonos%2C_Greece_-_50661522178.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Plajă și insulă în Mykonos" loading="lazy"><span class="place-type">Plajă premium</span></div>
+              <div class="place-info"><div><h3>Mykonos</h3><p>Grecia · Plaje și soare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="grecia" data-name="grecia meteora manastiri stanci grece">
+            <a href="https://ro.wikipedia.org/wiki/Meteora" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Meteora">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a4/Holy_Monastery_of_Rousanou.jpg/500px-Holy_Monastery_of_Rousanou.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Mănăstiri pe stânci la Meteora" loading="lazy"><span class="place-type">Peisaj magic</span></div>
+              <div class="place-info"><div><h3>Meteora</h3><p>Grecia · Stânci și mănăstiri</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="grecia" data-name="grecia zakynthos plaja turtle ionian">
+            <a href="https://ro.wikipedia.org/wiki/Zakynthos" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Zakynthos">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/a/ab/Zakyntos_city_view.jpg/960px-Zakyntos_city_view.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Plajă din Zakynthos și apă turcoaz" loading="lazy"><span class="place-type">Mare turcoaz</span></div>
+              <div class="place-info"><div><h3>Zakynthos</h3><p>Grecia · Plaje și ape limpezi</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="grecia" data-name="grecia corfu insula plaja mare">
+            <a href="https://ro.wikipedia.org/wiki/Corfu" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Corfu">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/44/Pontikonisi.jpg/960px-Pontikonisi.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Peisaj de coastă din Corfu" loading="lazy"><span class="place-type">Insulă pe mare</span></div>
+              <div class="place-info"><div><h3>Corfu</h3><p>Grecia · Veghe, plajă și vegetație</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="grecia" data-name="grecia creta munte plaja insula">
+            <a href="https://ro.wikipedia.org/wiki/Creta" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Creta">
+              <div class="place-image"><img src="https://cdn.travelconline.com/images/fit-in/2000x0/filters:quality(75):strip_metadata():format(webp)/https%3A%2F%2Ftr2storage.blob.core.windows.net%2Fimagenes%2F3jUqFVy3J4CG-2YSGkTYyypjpeg.jpeg" alt="Peisaj din Creta, Grecia" loading="lazy"><span class="place-type">Insulă largă</span></div>
+              <div class="place-info"><div><h3>Creta</h3><p>Grecia · Plaje, munți și istorie</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="grecia" data-name="grecia delphi antichitate temple munte">
+            <a href="https://ro.wikipedia.org/wiki/Delphi" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Delphi">
+              <div class="place-image"><img src="https://www.gonomad.com/wp-content/uploads/2018/09/Delphi-Tolos.jpg" alt="Ruine antice din Delphi" loading="lazy"><span class="place-type">Loc sacru</span></div>
+              <div class="place-info"><div><h3>Delphi</h3><p>Grecia · Ruine și mitologie</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="grecia" data-name="grecia naxos insula coast plaja">
+            <a href="https://ro.wikipedia.org/wiki/Naxos" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Naxos">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Naxos-port.JPG/960px-Naxos-port.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Peisaj din Naxos" loading="lazy"><span class="place-type">Insulă liniștită</span></div>
+              <div class="place-info"><div><h3>Naxos</h3><p>Grecia · Plaje și natură</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="franta" data-name="franta paris turn eiffel arcul triumful">
+            <a href="https://ro.wikipedia.org/wiki/Paris" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Paris">
+              <div class="place-image"><img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1200&q=80" alt="Turnul Eiffel și străzile din Paris" loading="lazy"><span class="place-type">Oraș iconic</span></div>
+              <div class="place-info"><div><h3>Paris</h3><p>Franța · Artă și romantism</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="franta" data-name="franta provenza lavender campuri flori">
+            <a href="https://ro.wikipedia.org/wiki/Proven%C8%9Ba" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Provence">
+              <div class="place-image"><img src="https://neleatur.md/files/tours/hhCg8Q3q1QUICSAb7fdUERfRSFh8WkzyJavAnRR1.jpeg" alt="Câmpuri de lavandă în Provence" loading="lazy"><span class="place-type">Natură romantică</span></div>
+              <div class="place-info"><div><h3>Provence</h3><p>Franța · Lavandă și sate</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="franta" data-name="franta nice plaja riviera mediterana">
+            <a href="https://ro.wikipedia.org/wiki/Nisa" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Nice">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cb/Galerie_Nice.jpg/500px-Galerie_Nice.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Plajă și promenadă din Nice" loading="lazy"><span class="place-type">Riviera franceză</span></div>
+              <div class="place-info"><div><h3>Nice</h3><p>Franța · Plajă și promenade</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="franta" data-name="franta lille cathedrale medieval">
+            <a href="https://ro.wikipedia.org/wiki/Lille" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Lille">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/41/0_Lille_-_Vieille_bourse_du_travail_051201b.JPG/960px-0_Lille_-_Vieille_bourse_du_travail_051201b.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Centru istoric din Lille" loading="lazy"><span class="place-type">Oraș istoric</span></div>
+              <div class="place-info"><div><h3>Lille</h3><p>Franța · Istorie și arhitectură</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="franta" data-name="franta alpi ski munte franceza">
+            <a href="https://ro.wikipedia.org/wiki/Alpi" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Alpii francezi">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c4/2008_Jungfrau.jpg/500px-2008_Jungfrau.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Munte și zăpadă în Alpi" loading="lazy"><span class="place-type">Munți și ski</span></div>
+              <div class="place-info"><div><h3>Alpii francezi</h3><p>Franța · Munte și iarnă</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="franta" data-name="franta mont saint michel abati mare">
+            <a href="https://ro.wikipedia.org/wiki/Mont_Saint-Michel" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Mont Saint-Michel">
+              <div class="place-image"><img src="https://upload.wikimedia.org/wikipedia/commons/1/10/Mont_Saint_Michel_bordercropped.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled" alt="Munte și abație la Mont Saint-Michel" loading="lazy"><span class="place-type">Legendă medievală</span></div>
+              <div class="place-info"><div><h3>Mont Saint-Michel</h3><p>Franța · Munte și abație</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="spania" data-name="spania barcelona beach gaudi sagrada familia">
+            <a href="https://ro.wikipedia.org/wiki/Barcelona" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Barcelona">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/2/26/%CE%A3%CE%B1%CE%B3%CF%81%CE%AC%CE%B4%CE%B1_%CE%A6%CE%B1%CE%BC%CE%AF%CE%BB%CE%B9%CE%B1_2941.jpg/330px-%CE%A3%CE%B1%CE%B3%CF%81%CE%AC%CE%B4%CE%B1_%CE%A6%CE%B1%CE%BC%CE%AF%CE%BB%CE%B9%CE%B1_2941.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Clădiri moderne și plajă din Barcelona" loading="lazy"><span class="place-type">Mare și arhitectură</span></div>
+              <div class="place-info"><div><h3>Barcelona</h3><p>Spania · Viață și culoare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="spania" data-name="spania granada alhambra munte">
+            <a href="https://ro.wikipedia.org/wiki/Alhambra" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Alhambra">
+              <div class="place-image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxVu7BshoFhWA_nQB8M94DPOnxrOaqKqZh4hOR-ZD5NVGa0iNkpu_CJnc&s=10" alt="Palatul Alhambra din Granada" loading="lazy"><span class="place-type">Istorie și peisaj</span></div>
+              <div class="place-info"><div><h3>Granada</h3><p>Spania · Alhambra și munte</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="spania" data-name="spania valencia oras mare cultura">
+            <a href="https://ro.wikipedia.org/wiki/Valencia" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Valencia">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c8/Collagevalencia.JPG/330px-Collagevalencia.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Orașul Valencia și plaja din apropiere" loading="lazy"><span class="place-type">Lumină și mare</span></div>
+              <div class="place-info"><div><h3>Valencia</h3><p>Spania · Plajă și cultură</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="spania" data-name="spania sevilla flamenco alcazar">
+            <a href="https://ro.wikipedia.org/wiki/Sevilla" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Sevilla">
+              <div class="place-image"><img src="https://spain-sir-assets.s3.eu-west-1.amazonaws.com/1997f24c-30ce-46b7-b302-766fc955b630.jpg" alt="Străzi istorice și clădiri din Sevilla" loading="lazy"><span class="place-type">Tradiție și artă</span></div>
+              <div class="place-info"><div><h3>Sevilla</h3><p>Spania · Flamenco și istorie</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="spania" data-name="spania mallorca insula mare calatorie">
+            <a href="https://ro.wikipedia.org/wiki/Mallorca" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Mallorca">
+              <div class="place-image"><img src="https://glossar.travel/wp-content/uploads/2026/04/capcalera-10-lugares-para-visitar-palma-de-mallorca.jpg" alt="Coasta din Mallorca și apă turcoaz" loading="lazy"><span class="place-type">Insulă premium</span></div>
+              <div class="place-info"><div><h3>Mallorca</h3><p>Spania · Mare și peisaje</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="spania" data-name="spania toledo oras vechi castele">
+            <a href="https://ro.wikipedia.org/wiki/Toledo" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Toledo">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/8/8f/Vista_general_de_Toledo_%28Espa%C3%B1a%29_01.jpg/960px-Vista_general_de_Toledo_%28Espa%C3%B1a%29_01.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Orașul vechi și zidurile din Toledo" loading="lazy"><span class="place-type">Istorie medievală</span></div>
+              <div class="place-info"><div><h3>Toledo</h3><p>Spania · Zile de poveste</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="spania" data-name="spania costa brava mare peisaj">
+            <a href="https://ro.wikipedia.org/wiki/Costa_Brava" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Costa Brava">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/37/Tossa_de_Mar_Costa_Brava_1.jpg/250px-Tossa_de_Mar_Costa_Brava_1.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Peisaj de coastă și mare la Costa Brava" loading="lazy"><span class="place-type">Natură de coastă</span></div>
+              <div class="place-info"><div><h3>Costa Brava</h3><p>Spania · Coaste și golfuri</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="croatia" data-name="croatia dubrovnik ziduri oras vechi dalmatia">
+            <a href="https://ro.wikipedia.org/wiki/Dubrovnik" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Dubrovnik">
+              <div class="place-image"><img src="https://images.unsplash.com/photo-1555990793-da11153b2473?auto=format&fit=crop&w=1200&q=80" alt="Orașul vechi și zidurile din Dubrovnik" loading="lazy"><span class="place-type">Oraș medieval</span></div>
+              <div class="place-info"><div><h3>Dubrovnik</h3><p>Croația · Ziduri și mare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="croatia" data-name="croatia split palatul diocletian dalmatia">
+            <a href="https://ro.wikipedia.org/wiki/Split" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Split">
+              <div class="place-image"><img src="https://upload.wikimedia.org/wikipedia/commons/d/df/Split2.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled" alt="Coasta și clădirile istorice din Split" loading="lazy"><span class="place-type">Istorie pe coastă</span></div>
+              <div class="place-info"><div><h3>Split</h3><p>Croația · Palat și promenadă</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="croatia" data-name="croatia lacurile plitvice cascade parc national">
+            <a href="https://ro.wikipedia.org/wiki/Parcul_Na%C8%9Bional_Lacurile_Plitvice" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Lacurile Plitvice">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Plitvice_lakes.JPG/500px-Plitvice_lakes.JPG?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Peisaj natural cu lacuri și munți la Plitvice" loading="lazy"><span class="place-type">Parc național</span></div>
+              <div class="place-info"><div><h3>Lacurile Plitvice</h3><p>Croația · Lacuri și cascade</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="turcia" data-name="turcia istanbul bazar moschee mare">
+            <a href="https://ro.wikipedia.org/wiki/Istanbul" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Istanbul">
+              <div class="place-image"><img src="https://images.unsplash.com/photo-1527838832700-5059252407fa?auto=format&fit=crop&w=1200&q=80" alt="Moschei și străzi din Istanbul" loading="lazy"><span class="place-type">Cultură și ape</span></div>
+              <div class="place-info"><div><h3>Istanbul</h3><p>Turcia · Tradiții pe malul Bosforului</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura" data-country="turcia" data-name="turcia cappadocia baloane aer cald peisaj">
+            <a href="https://ro.wikipedia.org/wiki/Cappadocia" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Cappadocia">
+              <div class="place-image"><img src="https://anywhereweroam.com/wp-content/uploads/2022/08/cave-hotel-cappadocia-1024x768.webp" alt="Baloane cu aer cald deasupra Cappadociei" loading="lazy"><span class="place-type">Natură spectaculoasă</span></div>
+              <div class="place-info"><div><h3>Cappadocia</h3><p>Turcia · Baloane și peisaje</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="turcia" data-name="turcia antalya plaja munte mare">
+            <a href="https://ro.wikipedia.org/wiki/Antalya" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Antalya">
+              <div class="place-image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRC_dQ4eNiVx-NjdraCAHYrl12V-hS3NNjkLZkSYtWz6vLM9gMZUCAr8hoT&s=10" alt="Plajă cu mare și munți în Antalya" loading="lazy"><span class="place-type">Coastă mediteraneană</span></div>
+              <div class="place-info"><div><h3>Antalya</h3><p>Turcia · Plajă și soare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="turcia" data-name="turcia ephesus ruine antichitate">
+            <a href="https://ro.wikipedia.org/wiki/Efez" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Efes">
+              <div class="place-image"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4nmBYZzc_tAPjKZMv90rmWAfAcueI8SFTdJ_uUnFLbRV-VV9_3MD-eB-u&s=10" alt="Ruine antice și temple din Efes" loading="lazy"><span class="place-type">Istorie veche</span></div>
+              <div class="place-info"><div><h3>Efes</h3><p>Turcia · Ruine antice</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="turcia" data-name="turcia pamukkale travertine cascade">
+            <a href="https://ro.wikipedia.org/wiki/Pamukkale" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Pamukkale">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5d/Pamukkale%2C_Denizli_2026_68.jpg/1280px-Pamukkale%2C_Denizli_2026_68.jpg?utm_source=ro.wikipedia.org&utm_campaign=index&utm_content=thumbnail" alt="Travertine albe și cascade din Pamukkale" loading="lazy"><span class="place-type">Natură unică</span></div>
+              <div class="place-info"><div><h3>Pamukkale</h3><p>Turcia · Terase albe</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="turcia" data-name="turcia trabzon coast cultura">
+            <a href="https://ro.wikipedia.org/wiki/Trabzon" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Trabzon">
+              <div class="place-image"><img src="https://tcw-blog-assets.s3.eu-west-1.amazonaws.com/how-many-days-trabzon/hero.jpg" alt="Orașul Trabzon și coasta neagră" loading="lazy"><span class="place-type">Port și istorie</span></div>
+              <div class="place-info"><div><h3>Trabzon</h3><p>Turcia · Coastă și tradiție</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="turcia" data-name="turcia bodrum yacht mare plaja">
+            <a href="https://ro.wikipedia.org/wiki/Bodrum" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Bodrum">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4a/Sunset_over_Bodrum_I.jpg/960px-Sunset_over_Bodrum_I.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Plajă și iahturi din Bodrum" loading="lazy"><span class="place-type">Vacanță premium</span></div>
+              <div class="place-info"><div><h3>Bodrum</h3><p>Turcia · Mare și yachturi</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie oras" data-country="egipt" data-name="egipt cairo piramide istorie">
+            <a href="https://ro.wikipedia.org/wiki/Cairo" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Cairo">
+              <div class="place-image"><img src="https://egyptra.pro/uploads/photo_library/photo_a11bd015f601ca47.webp" alt="Orașul Cairo și marile monumente egiptene" loading="lazy"><span class="place-type">Istorie milenară</span></div>
+              <div class="place-info"><div><h3>Cairo</h3><p>Egipt · Piramide și viață urbană</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="egipt" data-name="egipt giza piramide egipt">
+            <a href="https://ro.wikipedia.org/wiki/Piramidele_din_Giza" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Piramidele din Giza">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Pyramids_of_the_Giza_Necropolis.jpg/500px-Pyramids_of_the_Giza_Necropolis.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Piramidele din Giza, Egipt" loading="lazy"><span class="place-type">Monument emblematic</span></div>
+              <div class="place-info"><div><h3>Piramidele din Giza</h3><p>Egipt · Plateauul Giza</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="egipt" data-name="egipt luxor temple nil">
+            <a href="https://ro.wikipedia.org/wiki/Luxor" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Luxor">
+              <div class="place-image"><img src="https://upload.wikimedia.org/wikipedia/commons/5/50/Egypt.LuxorTemple.River.01.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail_unscaled" alt="Temple antice și malul Nilului în Luxor" loading="lazy"><span class="place-type">Templu și Nil</span></div>
+              <div class="place-info"><div><h3>Luxor</h3><p>Egipt · Templul și Nilul</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="egipt" data-name="egipt hurghada mare plaja">
+            <a href="https://ro.wikipedia.org/wiki/Hurghada" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Hurghada">
+              <div class="place-image"><img src="https://img.poehalisnami.md/static/hotels/egipet/sharm-el-shejjkh/h350969/small/hotel_2b28b65d24350969_639040777953051404.jpg" alt="Plajă tropicală din Hurghada" loading="lazy"><span class="place-type">Mare și soare</span></div>
+              <div class="place-info"><div><h3>Hurghada</h3><p>Egipt · Plajă și relaxare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="natura oras" data-country="egipt" data-name="egipt sharm al sheikh mare recif">
+            <a href="https://ro.wikipedia.org/wiki/Sharm_el-Sheikh" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Sharm El Sheikh">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Sharm_El_Sheikh_aerial.jpg/960px-Sharm_El_Sheikh_aerial.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Coastă și recifuri din Sharm El Sheikh" loading="lazy"><span class="place-type">Scufundări și mare</span></div>
+              <div class="place-info"><div><h3>Sharm El Sheikh</h3><p>Egipt · Recif și relaxare</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <article class="place-card" data-category="istorie natura" data-country="egipt" data-name="egipt aswan temple nubia">
+            <a href="https://ro.wikipedia.org/wiki/Aswan" target="_blank" rel="noreferrer" aria-label="Află mai multe despre Aswan">
+              <div class="place-image"><img src="https://thumb.wikimedia.org/wikipedia/commons/thumb/3/3f/Panoramic_view_of_Aswan_2%2C_Egypt.jpg/960px-Panoramic_view_of_Aswan_2%2C_Egypt.jpg?utm_source=ro.wikipedia.org&utm_campaign=parser&utm_content=thumbnail" alt="Peisajul Nilului și templele din Aswan" loading="lazy"><span class="place-type">Peisaj unic</span></div>
+              <div class="place-info"><div><h3>Aswan</h3><p>Egipt · Nil și peisaje</p></div><span class="place-arrow" aria-hidden="true">↗</span></div>
+            </a>
+          </article>
+
+          <p class="empty-state hidden" id="empty-state">Nu am găsit locația căutată. Încearcă alt cuvânt sau schimbă filtrul.</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="note">
+      <p>„Uneori, cel mai frumos plan e să alegi un drum și să vezi unde te duce.”</p>
+      <a href="#locuri">Găsește-ți următorul drum <span aria-hidden="true">→</span></a>
+    </aside>
+  </main>
+
+  <footer>
+    <a class="brand" href="#sus"><span class="brand-mark" aria-hidden="true">H</span> <span class="brand-title">Hai prin România</span></a>
+    <span>Făcut cu drag, pentru drumuri de ținut minte.</span>
+    <span>© 2026</span>
+  </footer>
+
+  <style>
+    .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  </style>
+
+  <script>
+    const filterButtons = [...document.querySelectorAll('.filter')];
+    const countryButtons = [...document.querySelectorAll('[data-country]')];
+    const categoryButtons = [...document.querySelectorAll('[data-filter]')];
+    const cards = [...document.querySelectorAll('.place-card')];
+    const searchInput = document.querySelector('#search');
+    const resultCount = document.querySelector('#results-count');
+    const emptyState = document.querySelector('#empty-state');
+    const heroTitle = document.querySelector('#hero-title');
+    const heroCaption = document.querySelector('.hero-caption');
+    const brandTitles = [...document.querySelectorAll('.brand-title')];
+    let activeFilter = 'toate';
+    let activeCountry = 'toate';
+
+    function updateCountryTitle(countryKey) {
+      const button = countryButtons.find((item) => item.dataset.country === countryKey) || countryButtons[0];
+      heroTitle.textContent = button.dataset.title || 'România, în toate poveștile ei';
+      heroCaption.textContent = button.dataset.caption || 'Peisaj românesc, dimineața devreme';
+      const countryName = button.textContent.trim() === 'Toate țările' ? 'România' : button.textContent.trim();
+      brandTitles.forEach((title) => {
+        title.textContent = `Hai prin ${countryName}`;
+      });
+    }
+
+    function updateDestinations() {
+      const query = searchInput.value.trim().toLocaleLowerCase('ro');
+      let visibleCount = 0;
+
+      cards.forEach((card) => {
+        const matchesCategory = activeFilter === 'toate' || card.dataset.category.split(' ').includes(activeFilter);
+        const matchesCountry = activeCountry === 'toate' || card.dataset.country === activeCountry;
+        const matchesSearch = card.dataset.name.includes(query) || card.querySelector('h3').textContent.toLocaleLowerCase('ro').includes(query);
+        const isVisible = matchesCategory && matchesCountry && matchesSearch;
+        card.classList.toggle('hidden', !isVisible);
+        if (isVisible) visibleCount += 1;
+      });
+
+      resultCount.textContent = `${visibleCount} ${visibleCount === 1 ? 'loc de descoperit' : 'locuri de descoperit'}`;
+      emptyState.classList.toggle('hidden', visibleCount !== 0);
+    }
+
+    countryButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeCountry = button.dataset.country;
+        countryButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        updateCountryTitle(activeCountry);
+        updateDestinations();
+      });
+    });
+
+    categoryButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        activeFilter = button.dataset.filter;
+        categoryButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+        updateDestinations();
+      });
+    });
+
+    searchInput.addEventListener('input', updateDestinations);
+    updateCountryTitle(activeCountry);
+    updateDestinations();
+  </script>
+</body>
+</html>
